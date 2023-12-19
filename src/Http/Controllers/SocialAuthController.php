@@ -47,7 +47,7 @@ class SocialAuthController extends Controller
             Auth::login($user);
             Session::regenerate();
 
-            return Inertia::location(url()->previous() ?? route('home'));
+            return Inertia::location(route('home'));
         } catch (\Throwable $throwable) {
             DB::rollBack();
 
