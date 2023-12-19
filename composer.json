@@ -30,8 +30,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bee\\Socialite\\BeeSocialiteServiceProvider",
-                "SocialiteProviders\\Manager\\ServiceProvider"
+                "Bee\\Socialite\\BeeSocialiteServiceProvider"
             ]
         }
     }
