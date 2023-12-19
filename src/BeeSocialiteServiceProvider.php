@@ -36,10 +36,6 @@ class BeeSocialiteServiceProvider extends ServiceProvider
 
         $this->configureRoutes();
         $this->registerTranslations();
-
-//        $this->app->register(\SocialiteProviders\Manager\ServiceProvider::class);
-//        $this->app['events']->listen(\SocialiteProviders\Manager\SocialiteWasCalled::class, [\SocialiteProviders\Telegram\TelegramExtendSocialite::class.'@handle']);
-
     }
 
     /**
