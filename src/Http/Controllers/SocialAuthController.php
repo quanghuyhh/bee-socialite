@@ -35,7 +35,6 @@ class SocialAuthController extends Controller
             DB::beginTransaction();
 
             $socialUser = Socialite::driver($provider->value)->user();
-            dd($socialUser);
             throw_if(
                 empty($socialUser),
                 new \Exception(trans('Failed to authenticate with '.ucfirst($provider->value).'. Please try again!'))
@@ -51,7 +50,6 @@ class SocialAuthController extends Controller
             return Inertia::location(url()->previous() ?? route('home'));
         } catch (\Throwable $throwable) {
             DB::rollBack();
-            dd($throwable);
 
             return redirect()->route('auth.login')->withErrors([
                 'email' => $throwable->getMessage(),

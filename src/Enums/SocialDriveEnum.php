@@ -5,9 +5,10 @@ namespace Bee\Socialite\Enums;
 enum SocialDriveEnum: string
 {
     case GITHUB = 'github';
-
-    case GOOGLE = 'google';
-
     case FACEBOOK = 'facebook';
-    case TELEGRAM = 'telegram';
+    case GOOGLE = 'google';
+    case LINKEDIN = 'linkedin';
+    case BITBUCKET = 'bitbucket';
+    case GITLAB = 'gitlab';
+    case TWITTER = 'twitter';
 }
