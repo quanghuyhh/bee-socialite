@@ -2,8 +2,13 @@
 
 namespace Bee\Socialite;
 
+use App\Models\Setting;
+use Bee\Socialite\Enums\SocialDriveEnum;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class BeeSocialiteServiceProvider extends ServiceProvider
 {
@@ -25,9 +30,7 @@ class BeeSocialiteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/bee-socialite.php', 'services'
-        );
+        $this->registerOAuthSettings();
 
         $this->registerMigrations();
         $this->registerResources();
@@ -78,5 +81,28 @@ class BeeSocialiteServiceProvider extends ServiceProvider
     public function registerMigrations(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
+    }
+
+    public function registerOAuthSettings(): void
+    {
+//        $this->mergeConfigFrom(
+//            __DIR__.'/../config/bee-socialite.php', 'services'
+//        );
+        if (Schema::hasTable('settings')) {
+            $settings = Cache::remember('settings', 60, function() {
+                return Setting::query()->pluck('value', 'name')->toArray();
+            });
+
+            collect($settings)->filter(
+                fn($value, $key) => !empty($value)
+                    && Str::contains($key, array_map(fn($case) => $case->value,SocialDriveEnum::cases()))
+            )
+            ->each(fn($value, $key) => config(["services.$key" => $value]));
+        }
+    }
+
+    public function registerInertiaShare()
+    {
+
     }
 }
