@@ -4,7 +4,7 @@
     "type": "library",
     "keywords": ["laravel", "bee", "socialite", "addon"],
     "license": "MIT",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "authors": [
         {
             "name": "Huy Hoang",

@@ -85,20 +85,32 @@ class BeeSocialiteServiceProvider extends ServiceProvider
 
     public function registerOAuthSettings(): void
     {
-//        $this->mergeConfigFrom(
-//            __DIR__.'/../config/bee-socialite.php', 'services'
-//        );
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/bee-socialite.php', self::PACKAGE_NAMESPACE
+        );
+
+        // if use config from env instead of setting database
+        if (config(self::PACKAGE_NAMESPACE . '.use_env_setting')) {
+            $this->updateServiceSettings(config(self::PACKAGE_NAMESPACE));
+            return;
+        }
+
         if (Schema::hasTable('settings')) {
             $settings = Cache::remember('settings', 60, function() {
                 return Setting::query()->pluck('value', 'name')->toArray();
             });
 
-            collect($settings)->filter(
-                fn($value, $key) => !empty($value)
-                    && Str::contains($key, array_map(fn($case) => $case->value,SocialDriveEnum::cases()))
-            )
-            ->each(fn($value, $key) => config(["services.$key" => $value]));
+            $this->updateServiceSettings($settings);
         }
+    }
+
+    protected function updateServiceSettings(array $settings = []): void
+    {
+        collect($settings)->filter(
+            fn($value, $key) => !empty($value)
+                && Str::contains($key, array_map(fn($case) => $case->value,SocialDriveEnum::cases()))
+        )
+            ->each(fn($value, $key) => config(["services.$key" => $value]));
     }
 
     public function registerInertiaShare()

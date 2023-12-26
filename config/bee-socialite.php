@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'use_env_setting' => env('BEE_SOCIALITE_USE_ENV', false),
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
