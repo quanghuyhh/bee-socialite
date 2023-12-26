@@ -89,8 +89,8 @@ class BeeSocialiteServiceProvider extends ServiceProvider
             __DIR__.'/../config/bee-socialite.php', self::PACKAGE_NAMESPACE
         );
 
-        // if use config from env instead of setting database
-        if (config(self::PACKAGE_NAMESPACE . '.use_env_setting')) {
+        // if you use config from env instead of setting database
+        if ($this->isUseEnvSettings()) {
             $this->updateServiceSettings(config(self::PACKAGE_NAMESPACE));
             return;
         }
@@ -113,8 +113,13 @@ class BeeSocialiteServiceProvider extends ServiceProvider
             ->each(fn($value, $key) => config(["services.$key" => $value]));
     }
 
-    public function registerInertiaShare()
+    protected function isUseEnvSettings(): bool
     {
+        if (empty(config(self::PACKAGE_NAMESPACE . '.domain_use_env_settings', ''))) {
+            return false;
+        }
 
+        $whitelistDomains = explode(',', config(self::PACKAGE_NAMESPACE . '.domain_use_env_settings', ''));
+        return Str::contains(request()->getHost(), $whitelistDomains);
     }
 }
